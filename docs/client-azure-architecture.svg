@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="diagramTitle diagramDesc">
+  <title id="diagramTitle">Client Azure architecture</title>
+  <desc id="diagramDesc">GitHub Actions provisions one client Azure subscription from Terraform state in HCP Terraform. The subscription contains a stand-alone virtual network and two public Linux web apps, React and FastAPI, on one shared App Service plan.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 9 5 L 0 8.8 Z" fill="#9a3412"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 9 5 L 0 8.8 Z" fill="#424a53"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", system-ui, sans-serif; fill: #1f2328; }
+      .h1 { font-size: 22px; font-weight: 650; }
+      .sub { font-size: 13px; fill: #57606a; }
+      .box-title { font-size: 15px; font-weight: 650; }
+      .box-text { font-size: 12px; fill: #424a53; }
+      .label { font-size: 12px; font-weight: 650; }
+      .muted { font-size: 12px; fill: #57606a; }
+      .tiny { font-size: 11px; fill: #57606a; }
+      .path { font-size: 11px; font-weight: 600; fill: #9a3412; }
+      .chip-title { font-size: 13px; font-weight: 650; }
+      .white { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" fill="#ffffff"/>
+
+  <text class="h1" x="40" y="38">Client Azure architecture</text>
+  <text class="sub" x="40" y="60">One client subscription. Terraform creates the network and both web apps. GitHub Actions deploys the code.</text>
+
+  <!-- Top row: who runs the workflow -->
+  <rect x="40" y="80" width="220" height="120" rx="10" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.5"/>
+  <text class="box-title" x="56" y="128">Engineer</text>
+  <text class="box-text" x="56" y="150">Starts the workflow</text>
+  <text class="box-text" x="56" y="168">from the main branch</text>
+
+  <line x1="260" y1="140" x2="292" y2="140" stroke="#424a53" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <rect x="300" y="80" width="270" height="120" rx="10" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.5"/>
+  <text class="box-title" x="316" y="128">GitHub Environment</text>
+  <text class="box-text" x="316" y="150">Secrets and variables</text>
+  <text class="box-text" x="316" y="168">for this one client</text>
+
+  <line x1="570" y1="140" x2="602" y2="140" stroke="#424a53" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <rect x="610" y="80" width="790" height="120" rx="10" fill="#fff8f3" stroke="#bc4c00" stroke-width="1.5"/>
+  <text class="box-title" x="626" y="104">GitHub Actions</text>
+
+  <rect x="626" y="116" width="246" height="68" rx="8" fill="#ffffff" stroke="#f0c8ad" stroke-width="1.25"/>
+  <text class="chip-title" x="640" y="142">plan-only</text>
+  <text class="tiny" x="640" y="162">Shows the plan and stops</text>
+
+  <rect x="884" y="116" width="246" height="68" rx="8" fill="#ffffff" stroke="#f0c8ad" stroke-width="1.25"/>
+  <text class="chip-title" x="898" y="142">provision-and-deploy</text>
+  <text class="tiny" x="898" y="162">Apply infrastructure, then deploy</text>
+
+  <rect x="1142" y="116" width="242" height="68" rx="8" fill="#ffffff" stroke="#f0c8ad" stroke-width="1.25"/>
+  <text class="chip-title" x="1156" y="142">deploy-only</text>
+  <text class="tiny" x="1156" y="162">Upload code to existing apps</text>
+
+  <!-- State store, branched off the apply path -->
+  <rect x="40" y="224" width="530" height="64" rx="10" fill="#fbf6ff" stroke="#8250df" stroke-width="1.5"/>
+  <text class="box-title" x="56" y="250">HCP Terraform</text>
+  <text class="box-text" x="190" y="250">State workspace client-acme-prod</text>
+  <text class="tiny" x="56" y="270">GitHub runs Terraform. HCP Terraform only stores that client's state.</text>
+
+  <!-- Arrows from the two deploy operations into Azure, and from apply to state -->
+  <path d="M 1007 200 L 1007 256 L 570 256" fill="none" stroke="#9a3412" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="path" x="640" y="248">writes state</text>
+
+  <path d="M 1007 256 L 1007 312" fill="none" stroke="#9a3412" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="path" x="1018" y="286">apply + deploy</text>
+
+  <path d="M 1263 200 L 1263 312" fill="none" stroke="#9a3412" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="path" x="1274" y="248">ZIP deploy</text>
+
+  <!-- Azure subscription -->
+  <rect x="40" y="312" width="1360" height="688" rx="12" fill="#f3f8fd" stroke="#0078d4" stroke-width="1.75"/>
+  <text class="box-title" x="64" y="344">Client Azure subscription</text>
+  <text class="sub" x="320" y="344">Authorized subscription for this client. Both resource groups are created here.</text>
+
+  <!-- Network resource group -->
+  <rect x="64" y="368" width="640" height="608" rx="10" fill="#f6f8fa" stroke="#8c959f" stroke-width="1.5"/>
+  <text class="box-title" x="84" y="400">rg-client-network</text>
+  <text class="muted" x="84" y="422">Stand-alone network. The web apps do not join it.</text>
+
+  <rect x="84" y="444" width="600" height="508" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1.25"/>
+  <text class="label" x="104" y="476">vnet-client</text>
+  <text class="muted" x="104" y="498">Address space 10.0.0.0/16</text>
+
+  <rect x="104" y="524" width="270" height="140" rx="8" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.25"/>
+  <text class="label" x="120" y="560">public-subnet</text>
+  <text class="box-text" x="120" y="584">10.0.1.0/24</text>
+  <text class="tiny" x="120" y="612">A name only. This subnet is</text>
+  <text class="tiny" x="120" y="630">not opened to the internet.</text>
+
+  <rect x="394" y="524" width="270" height="140" rx="8" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.25"/>
+  <text class="label" x="410" y="560">private-subnet</text>
+  <text class="box-text" x="410" y="584">10.0.2.0/24</text>
+  <text class="tiny" x="410" y="612">Reserved for later private</text>
+  <text class="tiny" x="410" y="630">workloads.</text>
+
+  <line x1="529" y1="664" x2="529" y2="692" stroke="#424a53" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <rect x="394" y="692" width="270" height="150" rx="8" fill="#ffffff" stroke="#8c959f" stroke-width="1.25"/>
+  <text class="label" x="410" y="728">nsg-client-private</text>
+  <text class="box-text" x="410" y="752">Azure default rules only</text>
+  <text class="tiny" x="410" y="780">Associated with</text>
+  <text class="tiny" x="410" y="798">private-subnet only.</text>
+
+  <text class="tiny" x="104" y="920">No virtual machines or private endpoints are placed here.</text>
+
+  <!-- Web resource group -->
+  <rect x="728" y="368" width="648" height="608" rx="10" fill="#f3faf4" stroke="#1a7f37" stroke-width="1.5"/>
+  <text class="box-title" x="748" y="400">rg-client-webapp</text>
+  <text class="muted" x="748" y="422">One shared plan and two public HTTPS sites.</text>
+
+  <rect x="748" y="444" width="608" height="72" rx="8" fill="#ffffff" stroke="#1a7f37" stroke-width="1.25"/>
+  <text class="label" x="764" y="474">asp-client</text>
+  <text class="box-text" x="764" y="496">Linux App Service plan · B1 by default · both apps share it</text>
+
+  <rect x="748" y="536" width="294" height="220" rx="8" fill="#ffffff" stroke="#d0d7de" stroke-width="1.25"/>
+  <text class="label" x="764" y="568">React Web App</text>
+  <text class="box-text" x="764" y="596">Node.js 22 LTS</text>
+  <text class="box-text" x="764" y="618">pm2 serves the built files</text>
+  <text class="box-text" x="764" y="640">SPA routes fall back to index.html</text>
+  <text class="tiny" x="764" y="668">HTTPS only · TLS 1.2 · FTP off</text>
+  <text class="tiny" x="764" y="688">Azure does not run npm</text>
+  <text class="tiny" x="764" y="720">Name is a global input,</text>
+  <text class="tiny" x="764" y="738">not derived from client</text>
+
+  <rect x="1062" y="536" width="294" height="220" rx="8" fill="#ffffff" stroke="#d0d7de" stroke-width="1.25"/>
+  <text class="label" x="1078" y="568">FastAPI Web App</text>
+  <text class="box-text" x="1078" y="596">Python 3.12</text>
+  <text class="box-text" x="1078" y="618">uvicorn main:app on port 8000</text>
+  <text class="box-text" x="1078" y="640">Installs requirements.txt on deploy</text>
+  <text class="tiny" x="1078" y="668">HTTPS only · TLS 1.2 · FTP off</text>
+  <text class="tiny" x="1078" y="688">Expects app = FastAPI() in main.py</text>
+  <text class="tiny" x="1078" y="720">Name is a global input,</text>
+  <text class="tiny" x="1078" y="738">not derived from client</text>
+
+  <text class="tiny" x="748" y="786">The React build receives the FastAPI public URL as VITE_API_URL.</text>
+  <text class="tiny" x="748" y="806">FastAPI stores the React public URL in FRONTEND_ORIGIN.</text>
+  <text class="tiny" x="748" y="826">The API code must read that setting to allow CORS.</text>
+
+  <rect x="748" y="848" width="608" height="100" rx="8" fill="#ddf4ff" stroke="#0969da" stroke-width="1.25"/>
+  <text class="label" x="764" y="882">Browser</text>
+  <text class="box-text" x="764" y="906">Calls both sites on their public hostnames</text>
+  <text class="tiny" x="764" y="928">https://&lt;app-name&gt;.azurewebsites.net</text>
+
+  <text class="tiny" x="40" y="1024">client stands for client_code, for example acme. Workspace names look like client-acme-prod. Web app names are chosen separately and must be unique across Azure.</text>
+</svg>

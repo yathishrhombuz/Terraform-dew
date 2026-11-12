@@ -1,3 +1,9 @@
+# Manual workflow. You pick a client GitHub Environment and one operation:
+#   plan-only            - show what Terraform would change; deploy nothing
+#   provision-and-deploy - apply infrastructure, then deploy React and FastAPI
+#   deploy-only          - upload new app code to web apps that already exist
+# Runs only from the main branch. The Environment's required reviewers
+# must approve before the job starts.
 name: Client Azure Provisioning and Deployment
 
 on:
@@ -36,6 +42,9 @@ jobs:
       run:
         shell: bash
 
+    # TF_VAR_* become Terraform variables. ARM_* are the Azure login
+    # the provider uses. All of them come from the selected Environment,
+    # so this job always targets that one client.
     env:
       TF_IN_AUTOMATION: 'true'
       OPERATION: ${{ inputs.operation }}
@@ -63,6 +72,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Fail fast if the Environment is incomplete, the workspace name
+      # does not match the client code, or a local tfvars file would
+      # override the Environment values.
       - name: Check client configuration and repository
         run: |
           set -euo pipefail
@@ -156,6 +168,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate -no-color
 
+      # plan-only stops after this. provision-and-deploy applies the
+      # saved plan. deploy-only skips both and only uploads app code.
       - name: Terraform Plan
         if: inputs.operation != 'deploy-only'
         run: terraform plan -lock-timeout=5m -input=false -out="$RUNNER_TEMP/client.tfplan"
@@ -185,6 +199,8 @@ jobs:
           cache: npm
           cache-dependency-path: ${{ env.FRONTEND_DIR }}/package-lock.json
 
+      # Vite bakes VITE_API_URL into the browser bundle at build time.
+      # The value is the FastAPI site's public URL from Terraform outputs.
       - name: Build React frontend
         if: inputs.operation != 'plan-only'
         working-directory: ${{ env.FRONTEND_DIR }}

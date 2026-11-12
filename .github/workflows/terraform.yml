@@ -1,3 +1,7 @@
+# Runs on every pull request and on pushes to main.
+# Checks that the Terraform files are formatted and internally valid.
+# It does not log in to Azure, does not read client secrets, and does
+# not create or change any infrastructure.
 name: Terraform Static Checks
 
 on:
