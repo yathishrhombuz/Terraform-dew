@@ -1,0 +1,30 @@
+# Terraform state / caches / plans (keep .terraform.lock.hcl committed)
+.terraform/
+.terraform.tfstate.lock.info
+terraform.tfstate
+terraform.tfstate.*
+terraform.tfstate.d/
+*.tfplan
+tfplan
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+crash.log
+crash.*.log
+
+# Azure credentials and local env files
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.key
+
+# Frontend / backend artifacts
+node_modules/
+dist/
+build/
+.venv/
+venv/
+__pycache__/
+*.pyc
