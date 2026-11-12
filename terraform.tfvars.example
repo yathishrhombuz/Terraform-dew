@@ -1,0 +1,8 @@
+# Example only for local testing. Do NOT commit real customer values.
+# GitHub Actions uses the selected client's environment variables instead.
+subscription_id      = "00000000-0000-0000-0000-000000000000"
+location             = "eastus"
+client_code          = "acme"
+react_webapp_name    = "acme-react-prod-001"
+fastapi_webapp_name  = "acme-api-prod-001"
+app_service_sku_name = "B1"

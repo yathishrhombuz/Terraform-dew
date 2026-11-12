@@ -1,0 +1,38 @@
+name: Terraform Static Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-checks:
+    name: Format and validate Terraform
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.14.6'
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive
+
+      # Does not connect to any customer's Terraform Cloud state.
+      - name: Initialize without backend
+        run: terraform init -backend=false -input=false
+
+      - name: Validate Terraform
+        run: terraform validate -no-color
