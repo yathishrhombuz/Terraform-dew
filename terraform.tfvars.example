@@ -1,5 +1,7 @@
-# Example only for local testing. Do NOT commit real customer values.
-# GitHub Actions uses the selected client's environment variables instead.
+# Sample inputs for a local `terraform plan`. Copy this file to
+# terraform.tfvars and fill in real values. Do not commit that copy.
+# GitHub Actions does not read this file. It passes the same settings
+# from the selected client's GitHub Environment (TF_VAR_* variables).
 subscription_id      = "00000000-0000-0000-0000-000000000000"
 location             = "eastus"
 client_code          = "acme"
